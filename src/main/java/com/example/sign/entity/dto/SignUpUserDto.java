@@ -9,7 +9,5 @@ public class SignUpUserDto {
     private String email;
     private String password;
     private String phoneNumber;
-    private String authenticateCode;
-    private boolean isEmailDuplicated;
     private Date signUpDate;
 }

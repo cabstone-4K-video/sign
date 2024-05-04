@@ -46,23 +46,6 @@ public class UserController {
         return map;
     }
 
-
-//    //프론트에서 자동으로 Json으로 바뀜
-//    public Map<String, String> login(@RequestBody LoginDto loginDto) {
-//        Map<String, String> map = new HashMap<>();
-//        try {
-//            userService.login(loginDto);
-//            // response 보고 두범님과 해결
-//            map.put("code", "200");
-//
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            map.put("code", "405");
-//        }
-//        return map;
-//    }
-
-
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginDto loginDto) throws Exception {
         try {
