@@ -1,17 +1,14 @@
 package com.example.sign.entity;
 
+import com.example.sign.entity.dto.SignUpUserDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -19,8 +16,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "User")
+@Table(name = "user")
 public class User {
+
+    public User(String email, String password, String phoneNumber, String authenticateCode, boolean isEmailDuplicated, boolean isAdministrator, Date signUpDate) {
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.authenticateCode = authenticateCode;
+        this.isEmailDuplicated = isEmailDuplicated;
+        this.isAdministrator = isAdministrator;
+        this.signUpDate = signUpDate;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,14 +41,15 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String phonenumber;
+    private String phoneNumber;
 
     //이메일 인증을 받았나 확인
     @Column(nullable = false)
-    private boolean isAuthenticated;
+    private String authenticateCode;
+
+    @Column(nullable = false)
+    private boolean isEmailDuplicated;
+
      //컬럼명 대문자로 적으면 뒤진다
     @Column
     private boolean isAdministrator;
@@ -49,29 +57,11 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date signupdate;
+    private java.util.Date signUpDate;
 
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", phonenumber='" + phonenumber + '\'' +
-                ", isAuthenticated=" + isAuthenticated +
-                ", isAdministrator=" + isAdministrator +
-                ", signupdate=" + signupdate +
-                '}';
-    }
-
-    public String getUsername() {
-        return "";
     }
 
 
@@ -92,5 +82,17 @@ public class User {
 
     public boolean isEnabled() {
         return false;
+    }
+
+    public static User from(SignUpUserDto signUpUserDto) {
+        return new User(
+                signUpUserDto.getEmail(),
+                signUpUserDto.getPassword(),
+                signUpUserDto.getPhoneNumber(),
+                signUpUserDto.getAuthenticateCode(),
+                signUpUserDto.isEmailDuplicated(),
+                false,
+                signUpUserDto.getSignUpDate()
+        );
     }
 }

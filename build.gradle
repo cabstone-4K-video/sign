@@ -19,10 +19,23 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'mysql:mysql-connector-java:8.0.22'
-	implementation 'org.projectlombok:lombok'
+	//implementation 'org.projectlombok:lombok:1.18.24'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // JPA 의존성 추가
 	implementation 'org.springframework.security:spring-security-crypto'  // 패스워드 인코더를 위한 의존성
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt토큰 의존성
+
+
+	// com.sun.xml.bind
+	implementation 'com.sun.xml.bind:jaxb-impl'
+	implementation 'com.sun.xml.bind:jaxb-core'
+	// javax.xml.bind
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+	implementation 'org.glassfish.jaxb:jaxb-runtime'
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
