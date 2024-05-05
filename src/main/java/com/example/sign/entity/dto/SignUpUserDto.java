@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class SignUpUserDto {
+    //valid annotation 완성하기
     private String email;
     private String password;
     private String phoneNumber;

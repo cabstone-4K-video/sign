@@ -26,6 +26,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt토큰 의존성
+	implementation 'org.springframework:spring-websocket' //Websocket 의존성
 
 
 	// com.sun.xml.bind

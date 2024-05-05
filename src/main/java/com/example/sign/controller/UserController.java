@@ -2,6 +2,7 @@ package com.example.sign.controller;
 
 import com.example.sign.config.JwtUtil;
 import com.example.sign.entity.User;
+import com.example.sign.entity.dto.CheckDuplicateDto;
 import com.example.sign.entity.dto.LoginDto;
 import com.example.sign.entity.dto.SignUpUserDto;
 import com.example.sign.service.CustomUserDetailsService;
@@ -67,5 +68,19 @@ public class UserController {
                 "message", "로그인 성공",
                 "token", token
         );
+    }
+
+    @PostMapping("/checkduplicate")
+    public Map<String, String> checkDuplicate(@RequestBody CheckDuplicateDto checkDuplicateDto) {
+        Map<String, String> map = new HashMap<>();
+        try {
+            userService.checkduplicate(checkDuplicateDto);
+            map.put("code", "200");
+            map.put("message", "사용 가능한 이메일입니다.");
+        } catch (RuntimeException e) {
+            map.put("code", "409");
+            map.put("message", "200");
+        }
+        return map;
     }
 }
