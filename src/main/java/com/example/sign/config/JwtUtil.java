@@ -9,6 +9,7 @@ import java.util.Date;
 public class JwtUtil {
     private String secretKey = "capstone"; // 실제 서비스에서는 복잡한 키 사용
 
+    //보내준 token은 프런트에 로컬 스토리지나 쿠키에 저장하여야 함
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
