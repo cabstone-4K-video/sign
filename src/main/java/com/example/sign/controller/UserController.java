@@ -48,27 +48,33 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginDto loginDto) throws Exception {
-        try {
-            userService.login(loginDto);
-        } catch (Exception e) {
-            return Map.of(
-                    "code", "401",
-                    "message", e.getMessage(),
-                    "token", ""
-            );
-        }
+		public Map<String, String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) throws Exception {
+				try {
+						userService.login(loginDto);
+				} catch (Exception e) {
+						return Map.of(
+										"code", "401",
+										"message", e.getMessage(),
+										"token", ""
+						);
+				}
 
-        final UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginDto.getEmail());
+				final UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginDto.getEmail());
+				final String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        final String token = jwtUtil.generateToken(userDetails.getUsername());
+				Cookie cookie = new Cookie("token", token);
+				cookie.setHttpOnly(true);
+				cookie.setSecure(true); // HTTPS에서만 전송, 로컬 테스트 시에는 false로 설정
+				cookie.setPath("/");
+				cookie.setMaxAge(3600); // 쿠키 만료 시간 설정 (단위: 초)
+				response.addCookie(cookie);
 
-        return Map.of(
-                "code", "200",
-                "message", "로그인 성공",
-                "token", token
-        );
-    }
+				return Map.of(
+								"code", "200",
+								"message", "로그인 성공"
+				);
+		}
+
 
     @PostMapping("/checkduplicate")
     public Map<String, String> checkDuplicate(@RequestBody CheckDuplicateDto checkDuplicateDto) {
