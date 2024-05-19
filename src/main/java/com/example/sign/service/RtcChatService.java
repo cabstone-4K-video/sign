@@ -25,8 +25,6 @@ public class RtcChatService {
         ChatRoomDto room = ChatRoomDto.builder()
                 .roomId(UUID.randomUUID().toString())
                 .roomName(roomName)
-                .roomPwd(roomPwd) // 채팅방 패스워드
-                .secretChk(secretChk) // 채팅방 잠금 여부
                 .userCount(0) // 채팅방 참여 인원수
                 .maxUserCnt(maxUserCnt) // 최대 인원수 제한
                 .build();

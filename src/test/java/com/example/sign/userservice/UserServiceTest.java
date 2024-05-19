@@ -8,10 +8,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class UserServiceTest {
-    @Autowired
-    UserRepository userRepository;
-    @Test
-    public void test() {
-        System.out.println(userRepository.findById(1L).get().toString());
-    }
+
 }

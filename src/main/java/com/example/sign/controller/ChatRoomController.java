@@ -12,12 +12,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 public class ChatRoomController {
 
     private final ChatServiceMain chatServiceMain;
+
+    @GetMapping("/test")
+    public String index() {
+        return "Hi";
+    }
 
     // 채팅방 생성
     @PostMapping("/chat/createroom")

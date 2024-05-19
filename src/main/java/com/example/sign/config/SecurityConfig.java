@@ -72,7 +72,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/api/user/*").permitAll()
+                                .requestMatchers("/api/user/**", "/user/**", "/ws/chat/**", "**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .cors().and();  // CORS 활성화

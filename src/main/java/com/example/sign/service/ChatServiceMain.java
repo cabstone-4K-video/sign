@@ -47,7 +47,7 @@ public class ChatServiceMain {
 
     // 채팅방 비밀번호 확인
     public boolean confirmPwd(String roomId, String roomPwd) {
-        return roomPwd.equals(ChatRoomMap.getInstance().getChatRooms().get(roomId).getRoomPwd());
+        return roomPwd.equals(ChatRoomMap.getInstance().getChatRooms().get(roomId));
     }
 
     // 채팅방 인원+1
