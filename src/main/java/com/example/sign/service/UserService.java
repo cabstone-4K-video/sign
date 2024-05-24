@@ -33,7 +33,7 @@ public class UserService {
             throw new RuntimeException("유저가 없습니다");
         }
 
-        if (!Objects.equals(user.getPassword(), loginDto.getPassword())) {
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("비밀번호가 틀렸습니다");
         }
     }

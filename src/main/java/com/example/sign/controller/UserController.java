@@ -7,6 +7,7 @@ import com.example.sign.entity.dto.LoginDto;
 import com.example.sign.entity.dto.SignUpUserDto;
 import com.example.sign.service.CustomUserDetailsService;
 import com.example.sign.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class UserController {
 
     @PostMapping("/signup")
     //프론트에서 자동으로 Json으로 바뀜
-    public Map<String, String> signup(@RequestBody SignUpUserDto signUpUserDto) {
+    public Map<String, String> signup(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         Map<String, String> map = new HashMap<>();
         try {
             userService.signUp(User.from(signUpUserDto));
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginDto loginDto) throws Exception {
+    public Map<String, String> login(@Valid @RequestBody LoginDto loginDto) throws Exception {
         try {
             userService.login(loginDto);
         } catch (Exception e) {
@@ -70,6 +71,7 @@ public class UserController {
         );
     }
 
+    //@CrossOrigin(origins = "http://localhost:5173") // 이 컨트롤러의 메소드들에 대해 CORS 허용
     @PostMapping("/checkduplicate")
     public Map<String, String> checkDuplicate(@RequestBody CheckDuplicateDto checkDuplicateDto) {
         Map<String, String> map = new HashMap<>();
