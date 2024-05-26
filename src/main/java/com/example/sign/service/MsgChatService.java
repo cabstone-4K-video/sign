@@ -2,14 +2,15 @@ package com.example.sign.service;
 
 import com.example.sign.entity.dto.ChatRoomDto;
 import com.example.sign.entity.dto.ChatRoomMap;
+import com.example.sign.entity.dto.ChatType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,21 +18,21 @@ import java.util.UUID;
 public class MsgChatService {
 
 
-    // 채팅방 삭제에 따른 채팅방의 사진 삭제를 위한 fileService 선언
-
     public ChatRoomDto createChatRoom(String roomName, String roomPwd, boolean secretChk, int maxUserCnt) {
         // roomName 와 roomPwd 로 chatRoom 빌드 후 return
         ChatRoomDto room = ChatRoomDto.builder()
                 .roomId(UUID.randomUUID().toString())
                 .roomName(roomName)
+                .roomPwd(roomPwd) // 채팅방 패스워드
+                .secretChk(secretChk) // 채팅방 잠금 여부
                 .userCount(0) // 채팅방 참여 인원수
                 .maxUserCnt(maxUserCnt) // 최대 인원수 제한
                 .build();
 
-        room.setUserList(new HashMap<String, String>());
+        room.setUserList(new ConcurrentHashMap<String, String>());
 
         // msg 타입이면 ChatType.MSG
-        room.setChatType(ChatRoomDto.ChatType.MSG);
+        room.setChatType(ChatType.MSG);
 
         // map 에 채팅룸 아이디와 만들어진 채팅룸을 저장
         ChatRoomMap.getInstance().getChatRooms().put(room.getRoomId(), room);
@@ -48,7 +49,8 @@ public class MsgChatService {
         // 아이디 중복 확인 후 userList 에 추가
         //room.getUserList().put(userUUID, userName);
 
-        HashMap<String, String> userList = (HashMap<String, String>) room.getUserList();
+        // hashmap 에서 concurrentHashMap 으로 변경
+        ConcurrentHashMap<String, String> userList = (ConcurrentHashMap<String, String>) room.getUserList();
         userList.put(userUUID, userName);
 
 
