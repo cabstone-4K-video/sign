@@ -60,7 +60,7 @@ dependencies {
 	// javax.xml.bind
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
-	implementation 'io.openvidu:openvidu-java-client:2.18.0'
+	implementation 'io.openvidu:openvidu-java-client:2.29.0'
 
 }
 

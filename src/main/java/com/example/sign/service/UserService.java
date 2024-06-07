@@ -4,6 +4,7 @@ import com.example.sign.entity.User;
 import com.example.sign.entity.UserRepository;
 import com.example.sign.entity.dto.CheckDuplicateDto;
 import com.example.sign.entity.dto.LoginDto;
+import com.example.sign.exception.DuplicateEmailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class UserService {
     public void checkduplicate(CheckDuplicateDto checkDuplicateDto) {
         User user = userRepository.findByEmail(checkDuplicateDto.getEmail());
         if (user != null) {
-            throw new RuntimeException("이미 사용 중인 이메일입니다.");
+            throw new DuplicateEmailException("이미 사용 중인 이메일입니다.");
         }
     }
 }

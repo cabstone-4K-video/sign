@@ -1,59 +1,71 @@
 package com.example.sign.controller;
 
-import io.openvidu.java.client.*;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import io.openvidu.java.client.Connection;
+import io.openvidu.java.client.ConnectionProperties;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/sessions")
 public class SessionController {
 
-    private OpenVidu openVidu;
-    private Map<String, Session> sessions;
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
 
-    public SessionController(@Value("${openvidu.url}") String openViduUrl,
-                             @Value("${openvidu.secret}") String openViduSecret) {
-        this.openVidu = new OpenVidu(openViduUrl, openViduSecret);
-        this.sessions = new ConcurrentHashMap<>();
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    @GetMapping("/create")
-    public String createSession() {
-        try {
-            SessionProperties properties = new SessionProperties.Builder().build();
-            Session session = openVidu.createSession(properties);
-            String sessionId = session.getSessionId();
-            sessions.put(sessionId, session); // 세션 ID와 세션 객체를 저장합니다.
-            return sessionId;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error creating session";
+    /**
+     * @param params The Session properties
+     * @return The Session ID
+     */
+    @PostMapping("/api/sessions")
+    public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        SessionProperties properties = SessionProperties.fromJson(params).build();
+        Session session = openvidu.createSession(properties);
+        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+    }
+
+    /**
+     * @param sessionId The Session in which to create the Connection
+     * @param params    The Connection properties
+     * @return The Token associated to the Connection
+     */
+    @PostMapping("/api/sessions/{sessionId}/connections")
+    public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
+                                                   @RequestBody(required = false) Map<String, Object> params)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openvidu.getActiveSession(sessionId);
+        if (session == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
 
-    @GetMapping("/get-token")
-    public String getToken(@RequestParam String sessionId) {
-        try {
-            Session session = sessions.get(sessionId); // 세션 객체를 맵에서 검색합니다.
-            if (session == null) {
-                return "Session not found";
-            }
-
-            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-                    .role(OpenViduRole.PUBLISHER)
-                    .data("Alice")
-                    .build();
-            Connection connection = session.createConnection(connectionProperties);
-            return connection.getToken();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error creating token";
-        }
-    }
 }

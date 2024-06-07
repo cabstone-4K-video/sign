@@ -71,18 +71,12 @@ public class UserController {
         );
     }
 
-    //@CrossOrigin(origins = "http://localhost:5173") // 이 컨트롤러의 메소드들에 대해 CORS 허용
     @PostMapping("/checkduplicate")
     public Map<String, String> checkDuplicate(@RequestBody CheckDuplicateDto checkDuplicateDto) {
         Map<String, String> map = new HashMap<>();
-        try {
-            userService.checkduplicate(checkDuplicateDto);
-            map.put("code", "200");
-            map.put("message", "사용 가능한 이메일입니다.");
-        } catch (RuntimeException e) {
-            map.put("code", "409");
-            map.put("message", "200");
-        }
+        userService.checkduplicate(checkDuplicateDto);
+        map.put("code", "200");
+        map.put("message", "사용 가능한 이메일입니다.");
         return map;
     }
 }
