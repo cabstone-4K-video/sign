@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-// https://jie0025.tistory.com/326
 @RestController
 @RequestMapping(value = "/api/user", produces = "application/json")
 public class UserController {

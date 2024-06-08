@@ -13,6 +13,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    //이메일 중복 시 예외처리
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateEmailException(DuplicateEmailException ex) {
         Map<String, String> response = new HashMap<>();

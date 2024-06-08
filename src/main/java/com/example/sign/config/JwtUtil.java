@@ -13,7 +13,7 @@ public class JwtUtil {
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                //expiration 시간을 정하기 위해 쓰는거 같애
+                //expiration 시간을 정하기 위해 사용
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10시간 후 만료
                 .signWith(SignatureAlgorithm.HS256, secretKey)

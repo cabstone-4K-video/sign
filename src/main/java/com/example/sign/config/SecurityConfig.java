@@ -24,7 +24,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/api/user/**", "/user/**", "/ws/chat/**", "**").permitAll()
+                                .requestMatchers("/api/user/**", "/user/**", "**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .cors().configurationSource(corsConfigurationSource()).and();  // CORS 활성화

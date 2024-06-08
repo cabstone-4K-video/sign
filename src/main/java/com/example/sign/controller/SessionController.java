@@ -38,10 +38,7 @@ public class SessionController {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    /**
-     * @param params The Session properties
-     * @return The Session ID
-     */
+    //세션 초기화
     @PostMapping("/api/sessions")
     public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
@@ -50,11 +47,7 @@ public class SessionController {
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
-    /**
-     * @param sessionId The Session in which to create the Connection
-     * @param params    The Connection properties
-     * @return The Token associated to the Connection
-     */
+    //세션 연결
     @PostMapping("/api/sessions/{sessionId}/connections")
     public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
                                                    @RequestBody(required = false) Map<String, Object> params)
