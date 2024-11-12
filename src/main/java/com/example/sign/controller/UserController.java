@@ -7,13 +7,13 @@ import com.example.sign.entity.dto.LoginDto;
 import com.example.sign.entity.dto.SignUpUserDto;
 import com.example.sign.service.CustomUserDetailsService;
 import com.example.sign.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-// https://jie0025.tistory.com/326
 @RestController
 @RequestMapping(value = "/api/user", produces = "application/json")
 public class UserController {
@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping("/signup")
     //프론트에서 자동으로 Json으로 바뀜
-    public Map<String, String> signup(@RequestBody SignUpUserDto signUpUserDto) {
+    public Map<String, String> signup(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         Map<String, String> map = new HashMap<>();
         try {
             userService.signUp(User.from(signUpUserDto));
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginDto loginDto) throws Exception {
+    public Map<String, String> login(@Valid @RequestBody LoginDto loginDto) throws Exception {
         try {
             userService.login(loginDto);
         } catch (Exception e) {
@@ -73,14 +73,9 @@ public class UserController {
     @PostMapping("/checkduplicate")
     public Map<String, String> checkDuplicate(@RequestBody CheckDuplicateDto checkDuplicateDto) {
         Map<String, String> map = new HashMap<>();
-        try {
-            userService.checkduplicate(checkDuplicateDto);
-            map.put("code", "200");
-            map.put("message", "사용 가능한 이메일입니다.");
-        } catch (RuntimeException e) {
-            map.put("code", "409");
-            map.put("message", "200");
-        }
+        userService.checkduplicate(checkDuplicateDto);
+        map.put("code", "200");
+        map.put("message", "사용 가능한 이메일입니다.");
         return map;
     }
 }
